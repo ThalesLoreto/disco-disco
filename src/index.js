@@ -5,19 +5,21 @@ const { Client, Collection } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
-const TOKEN = process.env.TOKEN;
-const CLIENT_ID = process.env.CLIENT_ID;
-const GUILD_ID = process.env.GUILD_ID;
-
 // To load commands
 const LOAD_SLASH = process.argv[2] == 'load';
 
+// Env vars
+const CLIENT_ID = process.env.CLIENT_ID;
+const GUILD_ID = process.env.GUILD_ID;
+const TOKEN = process.env.TOKEN;
+
+// Instance Discord Client
 const client = new Client({
   intents: ['GUILDS', 'GUILD_VOICE_STATES'],
 });
 
 // Addind slashcommands & player
-// entities to { client }
+// entities to { client } instance
 client.slashcommands = new Collection();
 client.player = new Player(client, {
   ytdlOptions: {
@@ -26,10 +28,11 @@ client.player = new Player(client, {
   },
 });
 
+// Create slash commands base by filenames
 let commands = [];
 
 const slashFiles = fs
-  .readdirSync('./slash')
+  .readdirSync('./src/slash')
   .filter(file => file.endsWith('.js'));
 
 for (const file of slashFiles) {
@@ -38,6 +41,7 @@ for (const file of slashFiles) {
   if (LOAD_SLASH) commands.push(slashCommand.data.toJSON());
 }
 
+// If 'load' the commands
 if (LOAD_SLASH) {
   const rest = new REST({ version: '9' }).setToken(TOKEN);
   console.log('Adicionando os comandos...');
@@ -61,6 +65,7 @@ if (LOAD_SLASH) {
     console.log(`Servidor: ${client.user.tag} rodando com sucesso!`);
   });
 
+  // Server listening the commands
   client.on('interactionCreate', interaction => {
     async function handleCommand() {
       if (!interaction.isCommand()) return;

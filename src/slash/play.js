@@ -49,14 +49,14 @@ module.exports = {
 
     let embed = new MessageEmbed();
 
-    if (interaction.options.getSubCommand() === 'search') {
+    if (interaction.options.getSubcommand() === 'search') {
       let url = interaction.options.getString('name');
       const result = await client.player.search(url, {
         requestedBy: interaction.user,
         searchEngine: QueryType.AUTO,
       });
       if (result.tracks.length === 0)
-        return interaction.editReply('Sem resultados..');
+        return await interaction.editReply('Sem resultados..');
 
       const song = result.tracks[0];
       await queue.addTrack(song);
@@ -64,14 +64,14 @@ module.exports = {
         .setDescription(`${song.title} foi adicionado a fila`)
         .setThumbnail(song.thumbnail)
         .setFooter({ text: `Duracao: ${song.duration}` });
-    } else if (interaction.options.getSubCommand() === 'song') {
+    } else if (interaction.options.getSubcommand() === 'song') {
       let url = interaction.options.getString('url');
       const result = await client.player.search(url, {
         requestedBy: interaction.user,
         searchEngine: QueryType.YOUTUBE_VIDEO,
       });
       if (result.tracks.length === 0)
-        return interaction.editReply('Sem resultados..');
+        return await interaction.editReply('Sem resultados..');
 
       const song = result.tracks[0];
       await queue.addTrack(song);
@@ -79,14 +79,14 @@ module.exports = {
         .setDescription(`${song.title} foi adicionado a fila`)
         .setThumbnail(song.thumbnail)
         .setFooter({ text: `Duracao: ${song.duration}` });
-    } else if (interaction.options.getSubCommand() === 'playlist') {
+    } else if (interaction.options.getSubcommand() === 'playlist') {
       let url = interaction.options.getString('url');
       const result = await client.player.search(url, {
         requestedBy: interaction.user,
         searchEngine: QueryType.YOUTUBE_PLAYLIST,
       });
       if (result.tracks.length === 0)
-        return interaction.editReply('Sem resultados..');
+        return await interaction.editReply('Sem resultados..');
 
       const playlist = result.playlist;
       await queue.addTracks(result.tracks);
