@@ -10,7 +10,6 @@ const LOAD_SLASH = process.argv[2] == 'load';
 
 // Env vars
 const CLIENT_ID = process.env.CLIENT_ID;
-const GUILD_ID = process.env.GUILD_ID;
 const TOKEN = process.env.TOKEN;
 
 // Instance Discord Client
@@ -46,7 +45,7 @@ if (LOAD_SLASH) {
   const rest = new REST({ version: '9' }).setToken(TOKEN);
   console.log('Adicionando os comandos...');
   rest
-    .put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
+    .put(Routes.applicationCommands(CLIENT_ID), {
       body: commands,
     })
     .then(() => {
